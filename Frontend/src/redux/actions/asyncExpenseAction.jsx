@@ -10,8 +10,8 @@ export const addExpenseAction = createAsyncThunk(
 );
 export const getAllExpenseAction = createAsyncThunk(
   "getAllExpenseAction",
-  async () => {
-    const response = await expenseApiServices.getAllExpense();
+  async (queryParams) => {
+    const response = await expenseApiServices.getAllExpense(queryParams);
     return response;
   }
 );
@@ -20,17 +20,20 @@ export const deleteExpenseAction = createAsyncThunk(
   async (expenseId, thunkAPI) => {
     const response = await expenseApiServices.deleteExpense(expenseId);
     if (response) {
-      thunkAPI.dispatch(getAllExpenseAction());
+       const state = thunkAPI.getState()
+      thunkAPI.dispatch(getAllExpenseAction(state?.expense?.queryParams));
     }
     return response;
   }
 );
+
 export const updateExpenseAction = createAsyncThunk(
   "updateExpenseAction",
   async (updatedExpenseData, thunkAPI) => {
     const response = await expenseApiServices.updateExpense(updatedExpenseData);
     if (response) {
-      thunkAPI.dispatch(getAllExpenseAction());
+      const state = thunkAPI.getState()
+      thunkAPI.dispatch(getAllExpenseAction(state?.expense?.queryParams));
     }
     return response;
   }

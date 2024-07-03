@@ -81,7 +81,7 @@ const LeaderBoard = () => {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       <TableCell align="left">{row.username}</TableCell>
-                      <TableCell align="left">₹{row.totalAmount}</TableCell>
+                      <TableCell align="left">{row.totalAmount ? `₹${row.totalAmount}` : "No expenses"}</TableCell>
                       <TableCell align="center">
                         <IconButton
                           sx={{ color: "#eb8690" }}

@@ -5,7 +5,12 @@ const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 const sequelize = require("../db/database");
 const { uploadFilesToS3 } = require("../services/UploadFile");
-const { dateForFileName } = require("../utils/dateForFileName");
+const {
+  dateForFileName,
+  getPagination,
+  getSorting,
+  getSearching,
+} = require("../utils/helperFunctions");
 
 exports.addExpense = async (req, res) => {
   const t = await sequelize.transaction();
@@ -32,9 +37,16 @@ exports.addExpense = async (req, res) => {
       return res.status(400).json(new ApiError("user not found"));
     }
 
+
     user.totalAmount += amount;
     await user.save({ transaction: t });
     await t.commit();
+   
+    console.log(user, "user cK")
+    console.log(amount, "user cK")
+    console.log(user.totalAmount, "user cK")
+
+
     return res
       .status(201)
       .json(new ApiResponse("New expense created succesfully", createExpense));
@@ -51,18 +63,42 @@ exports.addExpense = async (req, res) => {
 exports.getAllExpense = async (req, res) => {
   try {
     const userId = req.user.id;
-    const getAllExpenseData = await Expense.findAll({
-      where: { userId },
+
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+    const sortBy = req.query.sortBy || 'createdAt';
+    const sortOrder = req.query.sortOrder || 'DESC';
+    const search = req.query.search || '';
+
+    const { limit, offset } = getPagination(page, pageSize);
+    const order = getSorting(sortBy, sortOrder);
+    const searchFilter = getSearching(search);
+
+    const getAllExpenseData = await Expense.findAndCountAll({
+      where: {
+        userId,
+        ...searchFilter,
+      },
+      limit,
+      offset,
+      order,
     });
 
     if (!getAllExpenseData) {
-      res.status(500).json(new ApiError("Something went wrong"));
+      res.status(404).json(new ApiError("Expense not found"));
     }
+
+    const responseData = {
+      total: getAllExpenseData.count,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(getAllExpenseData.count / limit),
+      data: getAllExpenseData.rows,
+     
+    };
+
     return res
       .status(200)
-      .json(
-        new ApiResponse("Get all expenses successfully", getAllExpenseData)
-      );
+      .json(new ApiResponse("Get all expenses successfully", responseData));
   } catch (error) {
     return res.status(500).json(new ApiError("Internal server error"));
   }
@@ -209,7 +245,7 @@ exports.downloadExpensesList = async (req, res) => {
     return res.status(200).json(
       new ApiResponse("Get file url successfully", {
         fileUrl: fileUrl.Location,
-        fileName: fileUrl.Key
+        fileName: fileUrl.Key,
       })
     );
   } catch (error) {
@@ -237,7 +273,10 @@ exports.downloadHistory = async (req, res) => {
     return res
       .status(200)
       .json(
-        new ApiResponse("Downloaded List fetch successfully", getDownloadHistory)
+        new ApiResponse(
+          "Downloaded List fetch successfully",
+          getDownloadHistory
+        )
       );
   } catch (error) {
     return res.status(500).json(new ApiError("Internal server error"));

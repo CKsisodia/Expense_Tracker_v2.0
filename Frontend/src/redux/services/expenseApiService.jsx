@@ -18,9 +18,18 @@ class ExpenseApiServices {
     }
   };
 
-  getAllExpense = async () => {
+  getAllExpense = async (queryParams = {}) => {
+    const params = {};
+
+    if (queryParams.page !== undefined) params.page = queryParams.page;
+    if (queryParams.pageSize !== undefined)
+      params.pageSize = queryParams.pageSize;
+    if (queryParams.sortBy !== undefined) params.sortBy = queryParams.sortBy;
+    if (queryParams.orderBy !== undefined) params.orderBy = queryParams.orderBy;
+    if (queryParams.search) params.search = queryParams.search;
+
     try {
-      const response = await ApiHelper.get("/expense/expense-list");
+      const response = await ApiHelper.get("/expense/expense-list", params);
       return response?.data;
     } catch (error) {
       console.log(error);

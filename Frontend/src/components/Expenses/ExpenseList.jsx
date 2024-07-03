@@ -1,6 +1,12 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Stack, Typography } from "@mui/material";
+import {
+  IconButton,
+  InputBase,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,10 +22,15 @@ import {
   deleteExpenseAction,
   getAllExpenseAction,
 } from "../../redux/actions/asyncExpenseAction";
-import { selectExpenseData } from "../../redux/reducers/expenseSlice";
+import {
+  expenseAction,
+  selectExpenseData,
+  selectQueryParam,
+} from "../../redux/reducers/expenseSlice";
 import formatDate from "../../utils/formattedDate";
 import EditExpense from "./EditExpense";
 import { useState } from "react";
+import { useDebounceVal } from "../../hooks/useDebounce";
 
 const columns = [
   { id: "category", label: "Category", align: "left", minWidth: 100 },
@@ -46,20 +57,32 @@ const columns = [
 
 const ExpenseList = () => {
   const dispatch = useDispatch();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const expenseData = useSelector(selectExpenseData);
+  const storedParams = JSON.parse(localStorage.getItem("queryParams"));
+
+  const [page, setPage] = useState(storedParams?.page || 0);
+  const [rowsPerPage, setRowsPerPage] = useState(storedParams?.pageSize || 5);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [expenseId, setExpenseId] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
-  const expenseData = useSelector(selectExpenseData);
+  const debouncedSearchValue = useDebounceVal(searchValue, 500);
 
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
   };
 
   useEffect(() => {
-    dispatch(getAllExpenseAction());
-  }, []);
+    const queryParams = {
+      page: page,
+      pageSize: rowsPerPage,
+      sortBy: "createdAt",
+      orderBy: "DESC",
+      search: debouncedSearchValue,
+    };
+    dispatch(expenseAction.setQueryParams(queryParams));
+    dispatch(getAllExpenseAction(queryParams));
+  }, [dispatch, page, rowsPerPage, debouncedSearchValue]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -76,7 +99,7 @@ const ExpenseList = () => {
 
   const editHandler = (id) => {
     setEditDialogOpen(true);
-    setExpenseId(id)
+    setExpenseId(id);
   };
 
   return (
@@ -85,11 +108,33 @@ const ExpenseList = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+              <TableCell align="end" colSpan={6}>
+                <Paper
+                  sx={{
+                    p: "2px 4px",
+                    display: "flex",
+                    alignItems: "center",
+                    maxWidth: "50%",
+                  }}
+                >
+                  <InputBase
+                    sx={{ ml: 1, flex: 1 }}
+                    placeholder="Search..."
+                    inputProps={{
+                      "aria-label": "Search...",
+                    }}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                </Paper>
+              </TableCell>
+            </TableRow>
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
                   style={{
+                    top: 58,
                     minWidth: column.minWidth,
                     backgroundColor: "#DBF2FF",
                   }}
@@ -128,7 +173,9 @@ const ExpenseList = () => {
                           <EditIcon />
                         </IconButton>
                         <EditExpense
-                          expenseData={expenseData?.data?.filter(item => item.id === expenseId)}
+                          expenseData={expenseData?.data?.filter(
+                            (item) => item.id === expenseId
+                          )}
                           open={editDialogOpen}
                           handleClose={handleEditDialogClose}
                         />
@@ -151,9 +198,9 @@ const ExpenseList = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={expenseData?.data ? expenseData?.data?.length : 0}
+        count={expenseData?.data ? expenseData?.total : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
