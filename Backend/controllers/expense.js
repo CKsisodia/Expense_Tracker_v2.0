@@ -10,7 +10,10 @@ const {
   getPagination,
   getSorting,
   getSearching,
+  viewFilter,
 } = require("../utils/helperFunctions");
+const moment = require('moment-timezone')
+const {Op} = require('sequelize')
 
 exports.addExpense = async (req, res) => {
   const t = await sequelize.transaction();
@@ -69,15 +72,19 @@ exports.getAllExpense = async (req, res) => {
     const sortBy = req.query.sortBy || 'createdAt';
     const sortOrder = req.query.sortOrder || 'DESC';
     const search = req.query.search || '';
+    const view = req.query.view || '';
 
     const { limit, offset } = getPagination(page, pageSize);
     const order = getSorting(sortBy, sortOrder);
     const searchFilter = getSearching(search);
+    const viewFilterDates = viewFilter(view);
+
 
     const getAllExpenseData = await Expense.findAndCountAll({
       where: {
         userId,
         ...searchFilter,
+        ...viewFilterDates
       },
       limit,
       offset,

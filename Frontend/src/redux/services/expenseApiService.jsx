@@ -27,6 +27,7 @@ class ExpenseApiServices {
     if (queryParams.sortBy !== undefined) params.sortBy = queryParams.sortBy;
     if (queryParams.orderBy !== undefined) params.orderBy = queryParams.orderBy;
     if (queryParams.search) params.search = queryParams.search;
+    if (queryParams.view !== 'all') params.view = queryParams.view;
 
     try {
       const response = await ApiHelper.get("/expense/expense-list", params);

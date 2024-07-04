@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,17 +8,30 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import useThrottle from "../../hooks/useThrottle";
 import { downloadExpensesAction } from "../../redux/actions/asyncExpenseAction";
 import downloadFile from "../../utils/downloadFile";
-import useThrottle from "../../hooks/useThrottle";
 
-const filterExpenses = ["All", "Daily", "Weekly", "Monthly"];
+const filterExpenses = [
+  { id: "all", val: "All" },
+  { id: "daily", val: "Daily" },
+  { id: "weekly", val: "Last Week" },
+  { id: "monthly", val: "Last Month" },
+];
 
-const PremiumUserBenefits = () => {
+const PremiumUserBenefits = (props) => {
   const dispatch = useDispatch();
+  const storedParams = JSON.parse(localStorage.getItem("queryParams"));
+  const [viewVal, setViewVal] = useState(storedParams?.view || "all");
+
   const [shake, setShake] = useState(false);
+
+  useEffect(() => {
+    setViewVal(storedParams?.view);
+  }, []);
 
   const handleClick = async () => {
     setShake(true);
@@ -66,16 +78,24 @@ const PremiumUserBenefits = () => {
         </Typography>
 
         <FormControl variant="outlined" fullWidth margin="normal">
-          <InputLabel id="category-select-label">Filter</InputLabel>
+          <InputLabel id="filter-select-label">Filter</InputLabel>
           <Select
-            name="category"
-            labelId="category-select-label"
+            name="filter"
+            labelId="filter-select-label"
             label="Filter"
             variant="outlined"
+            value={viewVal}
+            onChange={(e) => {
+              props.viewHandler(e.target.value);
+              setViewVal(e.target.value);
+            }}
           >
             {filterExpenses.map((expense) => (
-              <MenuItem key={expense} value={expense}>
-                {expense}
+              <MenuItem
+                key={expense.id}
+                value={expense.id || storedParams?.view}
+              >
+                {expense.val}
               </MenuItem>
             ))}
           </Select>

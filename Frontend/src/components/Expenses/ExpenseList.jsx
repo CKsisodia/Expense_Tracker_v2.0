@@ -55,7 +55,7 @@ const columns = [
   },
 ];
 
-const ExpenseList = () => {
+const ExpenseList = (props) => {
   const dispatch = useDispatch();
   const expenseData = useSelector(selectExpenseData);
   const storedParams = JSON.parse(localStorage.getItem("queryParams"));
@@ -79,10 +79,11 @@ const ExpenseList = () => {
       sortBy: "createdAt",
       orderBy: "DESC",
       search: debouncedSearchValue,
+      view: props.viewVal,
     };
     dispatch(expenseAction.setQueryParams(queryParams));
     dispatch(getAllExpenseAction(queryParams));
-  }, [dispatch, page, rowsPerPage, debouncedSearchValue]);
+  }, [dispatch, page, rowsPerPage, debouncedSearchValue, props.viewVal]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,7 +109,7 @@ const ExpenseList = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="end" colSpan={6}>
+              <TableCell align="right" colSpan={6}>
                 <Paper
                   sx={{
                     p: "2px 4px",
