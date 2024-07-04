@@ -11,10 +11,17 @@ exports.dateForFileName = (date) => {
 
   return `D-${day}-${month}-${year}-T-${hours}:${minutes}:${seconds}`;
 };
+exports.dateOnly = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
 
 exports.getPagination = (page, pageSize) => {
   const limit = pageSize ? parseInt(pageSize) : 10;
-  const offset = page ? page * limit : 0;
+  const offset = page ? parseInt(page) * limit : 0;
   return { limit, offset };
 };
 
@@ -28,11 +35,46 @@ exports.getSorting = (sortBy, sortOrder) => {
 
 exports.getSearching = (search) => {
   if (!search) return {};
-  console.log(search)
   return {
     [Op.or]: [
       { category: { [Op.like]: `%${search}%` } },
       { description: { [Op.like]: `%${search}%` } },
     ],
+  };
+};
+
+exports.viewFilter = (view) => {
+  if (!view) return {};
+  let startDate, endDate;
+
+  switch (view) {
+    case "daily":
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+      break;
+    case "weekly":
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+      break;
+    case "monthly":
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - 29);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+      break;
+    default:
+      return {};
+  }
+
+  return {
+    createdAt: {
+      [Op.between]: [startDate, endDate],
+    },
   };
 };

@@ -5,7 +5,7 @@ import {
   getLeaderboardAction,
 } from "../actions/asyncExpenseAction";
 
-const initialState = {
+export const initialState = {
   expenseData: [],
   leaderBoardData: [],
   downloadHistory: [],
@@ -15,6 +15,7 @@ const initialState = {
     sortBy: "createdAt",
     sortOrder: "DESC",
     search: "",
+    view: ""
   }
 };
 
