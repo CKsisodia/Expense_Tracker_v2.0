@@ -12,7 +12,7 @@ const RequireAuth = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 700);
 
     return () => clearTimeout(timer);
   }, [user?.status]);

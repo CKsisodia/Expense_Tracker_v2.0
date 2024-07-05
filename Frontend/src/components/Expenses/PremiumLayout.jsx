@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import PremiumUserBenefits from "./PremiumUserBenefits";
 import ExpenseList from "./ExpenseList";
@@ -16,10 +16,16 @@ const PremiumLayout = () => {
     setViewVal(val);
   };
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   return (
-    <Grid container spacing={2} p={4}>
+    <Grid container spacing={2} p={isSmallScreen ? 2 : 4}>
       {user?.data?.premiumUser && (
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} sx={{
+            mb: isSmallScreen ? '-60px' : isMediumScreen ? '-60px' : 0,
+          }}>
           <PremiumUserBenefits viewHandler={viewHandler} />
         </Grid>
       )}

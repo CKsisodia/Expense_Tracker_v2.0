@@ -7,7 +7,7 @@ import {
   getUserInfoAction,
   userLoginAction,
 } from "../../redux/actions/asyncAuthAction";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -99,12 +99,12 @@ const Login = () => {
         </div>
       </div>
       <div className={styles["forgot-password"]}>
-        <a href="/forgot-password" className={styles.anchor}>
+        <Link to="/forgot-password" className={styles.anchor}>
           Forgot password ?
-        </a>
-        <a href="/signup" className={styles.anchor}>
+        </Link>
+        <Link to="/signup" className={styles.anchor}>
           New user ?
-        </a>
+        </Link>
       </div>
 
       <input type="submit" className={styles.btn} value="Login" />

@@ -58,14 +58,14 @@
 
 .auth-content h2 {
   margin: 15px 0;
-  color: #333;
+  color: #bfa181;
   text-transform: uppercase;
   font-size: 2rem;
 }
 
 .auth-content h4 {
   margin-bottom: 24px;
-  color: #333;
+  color: #bfa181;
 }
 
 .auth-content .input-div {
@@ -74,7 +74,7 @@
   grid-template-columns: 7% 93%;
   margin: 25px 0;
   padding: 5px 0;
-  border-bottom: 2px solid #d9d9d9;
+  border-bottom: 2px solid #bfa181;
 }
 
 .auth-content .input-div.one {
@@ -82,7 +82,7 @@
 }
 
 .i {
-  color: #d9d9d9;
+  color: #bfa181;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,7 +98,7 @@
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
+  color: #bfa181;
   font-size: 18px;
   transition: 0.3s;
 }
@@ -151,7 +151,7 @@
   background: none;
   padding: 0.5rem 0.7rem;
   font-size: 1.2rem;
-  color: #555;
+  color: #bfa181;
   font-family: "poppins", sans-serif;
 }
 
@@ -163,14 +163,14 @@
   display: block;
   text-align: right;
   text-decoration: none;
-  color: #999;
+  color: #38d39f;
   font-size: 0.9rem;
   transition: 0.3s;
   margin-top: 12px;
 }
 
 .anchor:hover {
-  color: #38d39f;
+  color: #08ad76;
 }
 
 .btn {
@@ -183,7 +183,7 @@
   background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
   background-size: 200%;
   font-size: 1.2rem;
-  color: #fff;
+  color: #0A1828;
   font-family: "Poppins", sans-serif;
   margin: 1rem 0;
   cursor: pointer;

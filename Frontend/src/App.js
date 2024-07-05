@@ -21,7 +21,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getUserInfoAction());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

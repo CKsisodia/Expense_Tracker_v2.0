@@ -1,21 +1,20 @@
-import React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import React from "react";
+import { RotatingTriangles } from "react-loader-spinner";
 
 const Loading = () => {
+  const colorTriangle = ['#178582', '#bfa181', '#fceddc']
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex" , justifyContent:"center", margin:"280px"}}>
-        <svg width={0} height={0}>
-          <defs>
-            <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#e01cd5" />
-              <stop offset="100%" stopColor="#1CB5E0" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <CircularProgress
-          sx={{ "svg circle": { stroke: "url(#my_gradient)" } }}
+      <Box sx={{ display: "flex", justifyContent: "center", margin: "280px" }}>
+        <RotatingTriangles
+          visible={true}
+          height="180"
+          width="180"
+          colors = {colorTriangle}
+          ariaLabel="rotating-triangles-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
         />
       </Box>
     </React.Fragment>

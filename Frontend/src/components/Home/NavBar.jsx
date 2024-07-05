@@ -22,8 +22,9 @@ import {
 } from "../../redux/actions/asyncAuthAction";
 import { selectUserData, userActions } from "../../redux/reducers/authReducers";
 import ApiHelper from "../../utils/apiHelperFunction";
+import { MdWorkspacePremium } from "react-icons/md";
+import { useMediaQuery, useTheme } from "@mui/material";
 
-// const pages = ["Add Expense", "Expense List", "Analytics"];
 const pages = [
   { id: "addExpense", value: "Add Expense" },
   { id: "expenseList", value: "Expense List" },
@@ -71,7 +72,7 @@ const NavBar = () => {
 
   const settingsHandler = (id) => {
     if (id === "profile") {
-      return navigate("/profile");
+      return navigate("/");
     } else if (id === "logout") {
       dispatch(userActions.logoutUser());
       toast.success("You have logged out");
@@ -135,15 +136,21 @@ const NavBar = () => {
     }
   };
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#38d39f" }}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#0A1828", boxShadow: "none" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AccountBalanceIcon
             sx={{
               display: { xs: "none", md: "flex" },
               mr: 1,
-              color: "#023364",
+              color: "#178582",
             }}
           />
           <Typography
@@ -156,7 +163,7 @@ const NavBar = () => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "#023364",
+              color: "#178582",
               textDecoration: "none",
             }}
           >
@@ -170,9 +177,8 @@ const NavBar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="#023364"
             >
-              <MenuIcon />
+              <MenuIcon sx={{ color: "#178582", ml: isSmallScreen && -1  }} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -200,16 +206,23 @@ const NavBar = () => {
                     navBarMenuHandler(page.id);
                   }}
                 >
-                  <Typography textAlign="center">{page.value}</Typography>
+                  <Typography
+                    textAlign="center"
+                    sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                  >
+                    {page.value}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
+
           <AccountBalanceIcon
             sx={{
               display: { xs: "flex", md: "none" },
               mr: 1,
-              color: "#023364",
+              ml: isSmallScreen ? -2 : 2,
+              color: "#178582",
             }}
           />
           <Typography
@@ -217,18 +230,20 @@ const NavBar = () => {
             noWrap
             href="#app-bar-with-responsive-menu"
             sx={{
-              mr: 2,
+              mr: -2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "#023364",
+              letterSpacing: ".1rem",
+              color: "#178582",
               textDecoration: "none",
+              fontSize: isSmallScreen && "18px",
             }}
           >
-            Expense Tracker
+            Expense-T
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -237,104 +252,103 @@ const NavBar = () => {
                   handleCloseNavMenu();
                   navBarMenuHandler(page.id);
                 }}
-                sx={{ my: 2, color: "#023364", display: "block" }}
+                sx={{ my: 2, color: "#178582", display: "block" }}
               >
                 {page.value}
               </Button>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            {!user?.data?.premiumUser ? (
-              <Button
-                sx={{
-                  fontSize: "16px",
-                  color: "#023364",
-                  fontWeight: 700,
-                  mr: 2,
+          {/* <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}> */}
+          {!user?.data?.premiumUser ? (
+            <Typography
+              sx={{
+                fontSize: isSmallScreen ? "12px" : "18px",
+                color: "#bfa181",
+                fontWeight: 700,
+                mr: isSmallScreen ? 1 : 2,
+                cursor: "pointer",
+              }}
+              onClick={premiumHandler}
+            >
+              Buy Premium
+            </Typography>
+          ) : (
+            <>
+              <MdWorkspacePremium color="green" size="2rem" />
+            </>
+          )}
+          {/* </Box> */}
+
+          <Tooltip title="Open">
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{ p: isSmallScreen ? 0 : 2 }}
+            >
+              <Avatar>{avtarNameHandler(user?.data?.username)}</Avatar>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem
+                key={setting.id}
+                onClick={() => {
+                  handleCloseUserMenu();
+                  settingsHandler(setting.id);
                 }}
-                onClick={premiumHandler}
               >
-                Buy Premium
-              </Button>
-            ) : (
+                <Typography
+                  textAlign="center"
+                  sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                >
+                  {setting.value}
+                </Typography>
+              </MenuItem>
+            ))}
+            {user?.data?.premiumUser && (
               <>
-                <Button
-                  sx={{
-                    fontSize: "16px",
-                    color: "#023364",
-                    fontWeight: 700,
-                  }}
-                  onClick={() => {
-                    navigate("/download-history");
-                  }}
-                >
-                  Download History
-                </Button>
-                <Button
-                  sx={{
-                    fontSize: "16px",
-                    color: "#023364",
-                    fontWeight: 700,
-                    mr: 2,
-                  }}
-                  onClick={() => {
-                    navigate("/leader-board");
-                  }}
-                >
-                  Leaderboard
-                </Button>
+                <MenuItem>
+                  <Typography
+                    textAlign="center"
+                    sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      navigate("/download-history");
+                    }}
+                  >
+                    Download History
+                  </Typography>
+                </MenuItem>
+                <MenuItem>
+                  <Typography
+                    textAlign="center"
+                    sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      navigate("/leader-board");
+                    }}
+                  >
+                    Leaderboard
+                  </Typography>
+                </MenuItem>
               </>
             )}
-            {!user?.status && (
-              <Link to="/login">
-                <Button
-                  sx={{
-                    fontSize: "16px",
-                    color: "#023364",
-                    fontWeight: 700,
-                    mr: 2,
-                  }}
-                >
-                  Login
-                </Button>
-              </Link>
-            )}
-
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>{avtarNameHandler(user?.data?.username)}</Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.id}
-                  onClick={() => {
-                    handleCloseUserMenu();
-                    settingsHandler(setting.id);
-                  }}
-                >
-                  <Typography textAlign="center">{setting.value}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          </Menu>
         </Toolbar>
       </Container>
     </AppBar>

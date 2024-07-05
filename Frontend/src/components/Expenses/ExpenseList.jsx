@@ -31,6 +31,7 @@ import formatDate from "../../utils/formattedDate";
 import EditExpense from "./EditExpense";
 import { useState } from "react";
 import { useDebounceVal } from "../../hooks/useDebounce";
+import { MagnifyingGlass } from "react-loader-spinner";
 
 const columns = [
   { id: "category", label: "Category", align: "left", minWidth: 100 },
@@ -104,20 +105,35 @@ const ExpenseList = (props) => {
   };
 
   return (
-    <Paper sx={{ m: "80px auto auto auto" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+    <Paper sx={{ m: "40px auto auto auto", backgroundColor: "#fceddc" }}>
+      <TableContainer sx={{ maxHeight: 440}}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="right" colSpan={6}>
+              <TableCell
+                align="right"
+                colSpan={6}
+                style={{ backgroundColor: "#fceddc" }}
+              >               
                 <Paper
                   sx={{
                     p: "2px 4px",
                     display: "flex",
                     alignItems: "center",
                     maxWidth: "50%",
+                    backgroundColor: "#fceddc",
                   }}
                 >
+                  <MagnifyingGlass
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="magnifying-glass-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="magnifying-glass-wrapper"
+                  glassColor="#c0efff"
+                  color="#178582"
+                />
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Search..."
@@ -137,7 +153,8 @@ const ExpenseList = (props) => {
                   style={{
                     top: 58,
                     minWidth: column.minWidth,
-                    backgroundColor: "#DBF2FF",
+                    backgroundColor: "#bfa181",
+                    fontWeight: 700,
                   }}
                 >
                   {column.label}
@@ -156,7 +173,7 @@ const ExpenseList = (props) => {
                       <TableCell align="left">{row.description}</TableCell>
                       <TableCell align="left">₹{row.amount}</TableCell>
                       <TableCell align="center">
-                        {formatDate(row.updatedAt)}
+                        {formatDate(row.createdAt)}
                       </TableCell>
                       <TableCell align="right">
                         <IconButton
