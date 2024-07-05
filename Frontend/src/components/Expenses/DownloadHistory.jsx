@@ -17,6 +17,7 @@ import { selectDownloadHistoryData } from "../../redux/reducers/expenseSlice";
 import formatDate from "../../utils/formattedDate";
 import downloadFile from "../../utils/downloadFile";
 import useThrottle from "../../hooks/useThrottle";
+import { Box } from "@mui/material";
 
 const columns = [
   { id: "filename", label: "Filename", align: "left", minWidth: 100 },
@@ -61,7 +62,8 @@ const DownloadHistory = () => {
 
 
   return (
-    <Paper sx={{ width: "50%", m: "80px auto auto auto" }}>
+    <Box sx={{p:4}}>
+       <Paper sx={{ m: "40px auto auto auto",backgroundColor:'#fceddc' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -72,7 +74,8 @@ const DownloadHistory = () => {
                   align={column.align}
                   style={{
                     minWidth: column.minWidth,
-                    backgroundColor: "#DBF2FF",
+                    backgroundColor: "#bfa181",
+                    fontWeight:700
                   }}
                 >
                   {column.label}
@@ -129,6 +132,8 @@ const DownloadHistory = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+    </Box>
+   
   );
 };
 

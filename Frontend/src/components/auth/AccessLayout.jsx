@@ -15,4 +15,5 @@ const AccessLayout = ({ children }) => {
   );
 };
 
+
 export default AccessLayout;

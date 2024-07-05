@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../../styles/AccessLayout.module.css";
 import EmailIcon from "@mui/icons-material/Email";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { forgotPasswordAction } from "../../redux/actions/asyncAuthAction";
 
 const ForgotPassword = () => {
@@ -66,9 +66,9 @@ const ForgotPassword = () => {
           />
         </div>
       </div>
-      <a href="/login" className={styles.anchor}>
-        Return to login !
-      </a>
+      <Link to="/login" className={styles.anchor}>
+      Return to login!
+    </Link>
       <input type="submit" className={styles.btn} value="Send recovery link" />
     </form>
   );

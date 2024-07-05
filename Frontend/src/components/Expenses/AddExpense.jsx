@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -8,6 +9,8 @@ import {
   Select,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +29,26 @@ const expenseCategories = [
   "Education",
   "Clothing",
 ];
+
+const textfieldTheme = {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#bfa181",
+    },
+    "&:hover fieldset": {
+      borderColor: "#bfa181",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#bfa181",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#bfa181",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#bfa181",
+  },
+};
 
 const AddExpense = () => {
   const dispatch = useDispatch();
@@ -60,82 +83,95 @@ const AddExpense = () => {
     }
   };
 
-  return (
-    <Card
-      sx={{
-        maxWidth: 550,
-        margin: "80px auto",
-      }}
-    >
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <Typography
-            variant="h4"
-            align="center"
-            sx={{ color: "#023364", fontWeight: 700 }}
-          >
-            Fill your expense
-          </Typography>
-          <TextField
-            name="description"
-            required
-            margin="normal"
-            label="Description"
-            type="text"
-            fullWidth
-            variant="outlined"
-            onChange={handleChange}
-            value={expenseData.description}
-          />
-          <TextField
-            name="amount"
-            required
-            margin="normal"
-            label="Amount"
-            type="number"
-            fullWidth
-            variant="outlined"
-            onChange={handleChange}
-            value={expenseData.amount}
-          />
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-          <FormControl variant="outlined" fullWidth margin="normal">
-            <InputLabel id="category-select-label">Category</InputLabel>
-            <Select
-              name="category"
-              labelId="category-select-label"
-              label="Category"
+  return (
+    <Box sx={{ p: isSmallScreen && 4 }}>
+      <Card
+        sx={{
+          maxWidth: 550,
+          margin: "80px auto",
+          backgroundColor: "#fceddc",
+        }}
+      >
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Typography
+              variant="h4"
+              align="center"
+              sx={{ color: "#bfa181", fontWeight: 700 }}
+            >
+              Fill your expense
+            </Typography>
+            <TextField
+              name="description"
+              required
+              margin="normal"
+              label="Description"
+              type="text"
+              fullWidth
               variant="outlined"
               onChange={handleChange}
-              value={expenseData.category}
-            >
-              {expenseCategories.map((expense) => (
-                <MenuItem key={expense} value={expense}>
-                  {expense}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              value={expenseData.description}
+              sx={textfieldTheme}
+            />
+            <TextField
+              name="amount"
+              required
+              margin="normal"
+              label="Amount"
+              type="number"
+              fullWidth
+              variant="outlined"
+              onChange={handleChange}
+              value={expenseData.amount}
+              sx={textfieldTheme}
+            />
 
-          <Button
-            variant="contained"
-            type="submit"
-            fullWidth
-            sx={{
-              mt: 1,
-              backgroundColor: "#38d39f",
-              color: "#023364",
-              "&:hover": {
-                backgroundColor: "#229c73",
-              },
-              fontWeight: 600,
-            }}
-          >
-            Add Expense
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <FormControl
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              sx={textfieldTheme}
+            >
+              <InputLabel id="category-select-label">Category</InputLabel>
+              <Select
+                name="category"
+                labelId="category-select-label"
+                label="Category"
+                variant="outlined"
+                onChange={handleChange}
+                value={expenseData.category}
+              >
+                {expenseCategories.map((expense) => (
+                  <MenuItem key={expense} value={expense}>
+                    {expense}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="contained"
+              type="submit"
+              fullWidth
+              sx={{
+                mt: 1,
+                backgroundColor: "#bfa181",
+                color: "#0A1828",
+                "&:hover": {
+                  backgroundColor: "#a3805a",
+                },
+                fontWeight: 600,
+              }}
+            >
+              Add Expense
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 

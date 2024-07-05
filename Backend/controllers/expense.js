@@ -24,10 +24,11 @@ exports.addExpense = async (req, res) => {
       await t.rollback();
       return res.status(400).json(new ApiError("All fiels are mandatory"));
     }
+    const numberAmount = Number(amount);
     const createExpense = await Expense.create(
       {
         description,
-        amount,
+        amount:numberAmount,
         category,
         userId,
       },
@@ -40,15 +41,9 @@ exports.addExpense = async (req, res) => {
       return res.status(400).json(new ApiError("user not found"));
     }
 
-
-    user.totalAmount += amount;
+    user.totalAmount = Number(user.totalAmount) + numberAmount;    
     await user.save({ transaction: t });
     await t.commit();
-   
-    console.log(user, "user cK")
-    console.log(amount, "user cK")
-    console.log(user.totalAmount, "user cK")
-
 
     return res
       .status(201)
@@ -156,6 +151,9 @@ exports.updateExpense = async (req, res) => {
     const { expenseId } = req.params;
     const userId = req.user.id;
 
+    const numberAmount = Number(updateAmount);
+
+
     if (!(updateDescription && updateAmount && updateCategory && expenseId)) {
       await t.rollback();
       return res
@@ -175,9 +173,9 @@ exports.updateExpense = async (req, res) => {
       return res.status(404).json(new ApiError("Expense not found"));
     }
 
-    const oldAmount = expense.amount;
+    const oldAmount = Number(expense.amount);
     expense.description = updateDescription || expense.description;
-    expense.amount = updateAmount || expense.amount;
+    expense.amount = numberAmount || oldAmount;
     expense.category = updateCategory || expense.category;
     await expense.save({ transaction: t });
 
@@ -188,7 +186,7 @@ exports.updateExpense = async (req, res) => {
       return res.status(400).json(new ApiError("user not found"));
     }
 
-    user.totalAmount += updateAmount - oldAmount;
+    user.totalAmount = Number(user.totalAmount) + numberAmount - oldAmount;
 
     await user.save({ transaction: t });
     await t.commit();

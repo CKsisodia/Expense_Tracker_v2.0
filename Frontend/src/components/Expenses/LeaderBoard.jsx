@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectLeaderBoardData } from "../../redux/reducers/expenseSlice";
 import { useEffect } from "react";
 import { getLeaderboardAction } from "../../redux/actions/asyncExpenseAction";
-
+import { Box } from "@mui/material";
 
 const columns = [
   { id: "username", label: "Username", align: "left", minWidth: 100 },
@@ -34,7 +34,7 @@ const columns = [
 ];
 
 const LeaderBoard = () => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const leaderBoardData = useSelector(selectLeaderBoardData);
@@ -49,75 +49,90 @@ const LeaderBoard = () => {
   };
 
   useEffect(() => {
-    dispatch(getLeaderboardAction())
-  }, [])
-  
+    dispatch(getLeaderboardAction());
+  }, []);
 
   return (
-    <Paper sx={{ width: "50%", m: "80px auto auto auto" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{
-                    minWidth: column.minWidth,
-                    backgroundColor: "#DBF2FF",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          {leaderBoardData?.data && !!leaderBoardData?.data?.length ? (
-            <TableBody>
-              {leaderBoardData?.data
-                // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                ?.map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                      <TableCell align="left">{row.username}</TableCell>
-                      <TableCell align="left">{row.totalAmount ? `₹${row.totalAmount}` : "No expenses"}</TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          sx={{ color: "#eb8690" }}
-                          size="small"
-                        >
-                          {row.premiumUser ? <MdWorkspacePremium color="green" size="2rem"/> : <MdOutlineDoNotDisturb color="orange" size="2rem"/>} 
-                        </IconButton>
-                       
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          ) : (
-            <TableBody>
+    <Box sx={{ p: 4}}>
+      <Paper sx={{ m: "40px auto auto auto", backgroundColor: "#fceddc"  }}>
+        <TableContainer sx={{ maxHeight: 440}}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={4}>
-                  <Typography align="center" variant="h6">
-                    No Data found !
-                  </Typography>
-                </TableCell>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{
+                      minWidth: column.minWidth,
+                      backgroundColor: "#bfa181",
+
+                      fontWeight: 700,
+                    }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
               </TableRow>
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={leaderBoardData?.data ? leaderBoardData?.data?.length : 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+            </TableHead>
+            {leaderBoardData?.data && !!leaderBoardData?.data?.length ? (
+              <TableBody>
+                {leaderBoardData?.data
+                  // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  ?.map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                      >
+                        <TableCell align="left">{row.username}</TableCell>
+                        <TableCell align="left">
+                          {row.totalAmount
+                            ? `₹${row.totalAmount}`
+                            : "No expenses"}
+                        </TableCell>
+                        <TableCell align="center">
+                          <IconButton sx={{ color: "#eb8690" }} size="small">
+                            {row.premiumUser ? (
+                              <MdWorkspacePremium color="green" size="2rem" />
+                            ) : (
+                              <MdOutlineDoNotDisturb
+                                color="orange"
+                                size="2rem"
+                              />
+                            )}
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            ) : (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={4}>
+                    <Typography align="center" variant="h6">
+                      No Data found !
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            )}
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={leaderBoardData?.data ? leaderBoardData?.data?.length : 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </Box>
   );
 };
 

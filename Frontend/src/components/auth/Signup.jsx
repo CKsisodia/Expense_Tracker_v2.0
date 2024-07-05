@@ -5,7 +5,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import EmailIcon from "@mui/icons-material/Email";
 import { useDispatch } from "react-redux";
 import { userSignupAction } from "../../redux/actions/asyncAuthAction";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -126,9 +126,9 @@ const Signup = () => {
           />
         </div>
       </div>
-      <a href="/login" className={styles.anchor}>
+      <Link to="/login" className={styles.anchor}>
         Already a user ?
-      </a>
+      </Link>
       <input type="submit" className={styles.btn} value="Sign up" />
     </form>
   );

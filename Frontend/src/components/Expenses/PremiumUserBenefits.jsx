@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardContent,
   FormControl,
@@ -14,6 +15,8 @@ import { useDispatch } from "react-redux";
 import useThrottle from "../../hooks/useThrottle";
 import { downloadExpensesAction } from "../../redux/actions/asyncExpenseAction";
 import downloadFile from "../../utils/downloadFile";
+import { Circles } from "react-loader-spinner";
+import { toast } from "react-toastify";
 
 const filterExpenses = [
   { id: "all", val: "All" },
@@ -22,62 +25,70 @@ const filterExpenses = [
   { id: "monthly", val: "Last Month" },
 ];
 
+const textfieldTheme = {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#bfa181",
+    },
+    "&:hover fieldset": {
+      borderColor: "#bfa181",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#bfa181",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#bfa181",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#bfa181",
+  },
+};
+
 const PremiumUserBenefits = (props) => {
   const dispatch = useDispatch();
   const storedParams = JSON.parse(localStorage.getItem("queryParams"));
   const [viewVal, setViewVal] = useState(storedParams?.view || "all");
-
-  const [shake, setShake] = useState(false);
+  const [isDownload, setIsDownload] = useState(false);
 
   useEffect(() => {
     setViewVal(storedParams?.view);
   }, []);
 
   const handleClick = async () => {
-    setShake(true);
-    setTimeout(() => setShake(false), 500);
     const response = await dispatch(downloadExpensesAction());
     const urlStatus = response?.type?.split("/")[1];
     if (urlStatus === "fulfilled") {
+      setIsDownload(true);
       const { fileUrl, fileName } = response?.payload?.data;
-      downloadFile(fileUrl, fileName);
+      setTimeout(() => {
+        downloadFile(fileUrl, fileName);
+        setIsDownload(false);
+      }, 2000);
+    } else {
+      toast.error("Please add some expenses or try again after sometime");
     }
   };
 
   const downloadHandler = useThrottle(handleClick, 5000);
 
-  const shakeAnimation = `
-    @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
-    }
-
-    .shake {
-      animation: shake 0.5s;
-    }
-  `;
-
   return (
-    <Card sx={{ margin: "80px auto" }}>
+    <Card sx={{ margin: "40px auto", backgroundColor: "#fceddc" }}>
       <CardContent>
         <Typography
           variant="h4"
           align="center"
-          sx={{ color: "#023364", fontWeight: 700 }}
+          sx={{ color: "#bfa181", fontWeight: 700 }}
         >
           Day to Day Expenses
         </Typography>
 
-        <FormControl variant="outlined" fullWidth margin="normal">
+        <FormControl
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          sx={textfieldTheme}
+        >
           <InputLabel id="filter-select-label">Filter</InputLabel>
           <Select
             name="filter"
@@ -100,16 +111,30 @@ const PremiumUserBenefits = (props) => {
             ))}
           </Select>
         </FormControl>
-        <style>{shakeAnimation}</style>
-        <Typography variant="h5">Download Your Expenses</Typography>
-        <IconButton
-          sx={{ color: "#38d39f" }}
-          size="small"
-          className={shake ? "shake" : ""}
-          onClick={downloadHandler}
-        >
-          <FaDownload size="2rem" />
-        </IconButton>
+        <Box sx={{display:'flex',flexDirection:'column', alignItems:'center', mt:2}}>
+          <Typography variant="h5" sx={{ color: "#bfa181" }} align="center">
+            Download Your Expenses
+          </Typography>
+          {!isDownload ? (
+            <IconButton
+              sx={{ color: "#178582" }}
+              size="large"
+              onClick={downloadHandler}
+            >
+              <FaDownload size="4rem" />
+            </IconButton>
+          ) : (
+            <Circles
+              height="80"
+              width="80"
+              color="#178582"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={isDownload}
+            />
+          )}
+        </Box>
       </CardContent>
     </Card>
   );
