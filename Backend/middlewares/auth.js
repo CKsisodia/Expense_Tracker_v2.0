@@ -1,7 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt")
-const ApiError = require("../utils/ApiError")
+const bcrypt = require("bcrypt");
+const ApiError = require("../utils/ApiError");
 
 exports.generateAccessToken = (user) => {
   try {
@@ -15,29 +15,29 @@ exports.generateAccessToken = (user) => {
     });
     return jwtToken;
   } catch (error) {
-    console.log("Access token not generated", error);
+    throw new Error("Access token not generated", error);
   }
 };
 
 // validate token for each request
-exports.validateAccessToken = (req,res,next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-  
-    if (!token) {
-      return res.status(401).json(new ApiError("Access Token Missing"));
+exports.validateAccessToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json(new ApiError("Access Token Missing"));
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
+    if (err) {
+      return res
+        .status(403)
+        .json(new ApiError("Unauthorized Access - Token Expired"));
     }
-  
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
-      if (err) {
-        return res.status(403).json(new ApiError("Unauthorized Access - Token Expired"));
-      }
-      req.user = user;
-      next();
-    });
-  };
-
-
+    req.user = user;
+    next();
+  });
+};
 
 exports.generateRefreshToken = async (user) => {
   try {
@@ -53,8 +53,8 @@ exports.generateRefreshToken = async (user) => {
     return {
       refreshToken: jwtRefreshToken,
       hashedRefreshToken: hashedRefreshToken,
-    };;
+    };
   } catch (error) {
-    console.log("Refresh token not generated", error);
+    throw new Error("Refresh token not generated", error);
   }
 };

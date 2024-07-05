@@ -68,19 +68,15 @@ class ApiHelper {
         email: userEmail.email,
       });
 
-      console.log(response.data.data.accessToken)
-
       return response.data.data.accessToken;
     } catch (error) {
-      console.error("Failed to refresh access token", error);
-      return null;
+      throw new Error("Failed to refresh access token",error)
     }
   }
 
   getRefreshToken() {
     const name = "refreshToken=";
     const decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie); // This should show the cookies if any are set
     const ca = decodedCookie.split(";");
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
@@ -88,7 +84,6 @@ class ApiHelper {
         c = c.substring(1);
       }
       if (c.indexOf(name) === 0) {
-        console.log(c.substring(name.length, c.length));
         return c.substring(name.length, c.length);
       }
     }

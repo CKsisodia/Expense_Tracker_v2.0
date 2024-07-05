@@ -4,6 +4,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { forgotPasswordAction } from "../../redux/actions/asyncAuthAction";
+import { toast } from "react-toastify";
+import { Vortex } from "react-loader-spinner";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -12,6 +14,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState({
     email: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleFocus = (field) => {
     setFocus((prevFocus) => ({ ...prevFocus, [field]: true }));
@@ -30,13 +33,19 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await dispatch(forgotPasswordAction(email));
-    setEmail({ email: "" });
-    setFocus({ email: false });
-    console.log(response)
-    const status = response?.type?.split("/")[1];
-    if (status === "fulfilled") {
-      navigate("/login");
+    setLoading(true);
+    try {
+      const response = await dispatch(forgotPasswordAction(email));
+      setEmail({ email: "" });
+      setFocus({ email: false });
+      const status = response?.type?.split("/")[1];
+      if (status === "fulfilled") {
+        navigate("/login");
+      }
+    } catch (err) {
+      toast.error("Failed , Please try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,9 +76,32 @@ const ForgotPassword = () => {
         </div>
       </div>
       <Link to="/login" className={styles.anchor}>
-      Return to login!
-    </Link>
-      <input type="submit" className={styles.btn} value="Send recovery link" />
+        Return to login!
+      </Link>
+      {!loading ? (
+        <input
+          type="submit"
+          className={styles.btn}
+          value="Send recovery link"
+        />
+      ) : (
+        <Vortex
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="vortex-loading"
+          wrapperStyle={{}}
+          wrapperClass="vortex-wrapper"
+          colors={[
+            "#38d39f",
+            "#38d39f",
+            "#38d39f",
+            "#38d39f",
+            "#38d39f",
+            "#38d39f",
+          ]}
+        />
+      )}
     </form>
   );
 };

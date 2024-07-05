@@ -233,8 +233,6 @@ exports.downloadExpensesList = async (req, res) => {
 
     const fileUrl = await uploadFilesToS3(stringifyList, fileName);
 
-    console.log(fileUrl);
-
     if (!fileUrl) {
       return res.status(404).json(new ApiError("Please try after sometime"));
     }

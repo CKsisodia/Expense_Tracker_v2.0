@@ -56,7 +56,6 @@ class AuthApiServices {
       const response = await ApiHelper.get("/user/get-user-info");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -66,7 +65,6 @@ class AuthApiServices {
       const response = await ApiHelper.get("/user/buy-premium");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };

@@ -62,12 +62,6 @@ exports.viewFilter = (view) => {
       endDate.setHours(23, 59, 59, 999);
       break;
     case "monthly":
-      // startDate = new Date();
-      // startDate.setDate(startDate.getDate() - 29);
-      // startDate.setHours(0, 0, 0, 0);
-      // endDate = new Date();
-      // endDate.setHours(23, 59, 59, 999);
-      // Get the current date
       const currentDate = new Date();
       startDate = new Date(
         currentDate.getFullYear(),
@@ -91,9 +85,6 @@ exports.viewFilter = (view) => {
     default:
       return {};
   }
-
-  console.log(startDate, endDate, "ckckckkc");
-
   return {
     createdAt: {
       [Op.between]: [startDate, endDate],
