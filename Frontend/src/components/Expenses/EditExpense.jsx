@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   FormControl,
   IconButton,
@@ -10,15 +11,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
+import TextField from "@mui/material/TextField";
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { updateExpenseAction } from "../../redux/actions/asyncExpenseAction";
-import { selectExpenseData } from "../../redux/reducers/expenseSlice";
-import { useEffect } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -39,8 +37,6 @@ const expenseCategories = [
 
 const EditExpense = ({ open, handleClose, expenseData }) => {
   const dispatch = useDispatch();
-
-  console.log(expenseData[0])
 
   const [editFormData, setEditFormData] = useState({
     updateDescription: "",
@@ -76,7 +72,7 @@ const EditExpense = ({ open, handleClose, expenseData }) => {
       updateCategory: editFormData.updateCategory,
     };
     dispatch(updateExpenseAction(formattedUpdateExpenseData));
-    handleClose()
+    handleClose();
   };
 
   return (
@@ -135,7 +131,9 @@ const EditExpense = ({ open, handleClose, expenseData }) => {
             />
 
             <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel id="category-select-label">Update category</InputLabel>
+              <InputLabel id="category-select-label">
+                Update category
+              </InputLabel>
               <Select
                 name="updateCategory"
                 labelId="category-select-label"

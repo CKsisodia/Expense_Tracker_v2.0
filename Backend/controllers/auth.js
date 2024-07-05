@@ -34,7 +34,6 @@ exports.userSignup = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    console.log(newUser);
 
     return res
       .status(201)
@@ -331,8 +330,6 @@ exports.premiumOrder = async (req, res) => {
     const user = await User.findOne({
       where: { id: userId },
     });
-
-    console.log("User", user);
 
     if (!user) {
       return res.status(400).json(new ApiError("User not found"));

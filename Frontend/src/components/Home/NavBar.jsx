@@ -1,5 +1,6 @@
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useMediaQuery, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -13,8 +14,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
+import { MdWorkspacePremium } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   buyPremiumAction,
@@ -22,17 +24,11 @@ import {
 } from "../../redux/actions/asyncAuthAction";
 import { selectUserData, userActions } from "../../redux/reducers/authReducers";
 import ApiHelper from "../../utils/apiHelperFunction";
-import { MdWorkspacePremium } from "react-icons/md";
-import { useMediaQuery, useTheme } from "@mui/material";
 
 const pages = [
+  { id: "home", value: "Home" },
   { id: "addExpense", value: "Add Expense" },
   { id: "expenseList", value: "Expense List" },
-  { id: "analytics", value: "Analytics" },
-];
-const settings = [
-  { id: "profile", value: "Profile" },
-  { id: "logout", value: "Logout" },
 ];
 
 const NavBar = () => {
@@ -61,7 +57,7 @@ const NavBar = () => {
     const idToPath = {
       addExpense: "/add-expense",
       expenseList: "/expense-list",
-      analytics: "/",
+      home: "/",
     };
 
     const path = idToPath[id];
@@ -70,13 +66,9 @@ const NavBar = () => {
     }
   };
 
-  const settingsHandler = (id) => {
-    if (id === "profile") {
-      return navigate("/");
-    } else if (id === "logout") {
-      dispatch(userActions.logoutUser());
-      toast.success("You have logged out");
-    }
+  const settingsHandler = () => {
+    dispatch(userActions.logoutUser());
+    toast.success("You have logged out");
   };
 
   const loadRazorpayScript = () => {
@@ -178,7 +170,7 @@ const NavBar = () => {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
             >
-              <MenuIcon sx={{ color: "#178582", ml: isSmallScreen && -1  }} />
+              <MenuIcon sx={{ color: "#178582", ml: isSmallScreen && -1 }} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -285,7 +277,9 @@ const NavBar = () => {
               onClick={handleOpenUserMenu}
               sx={{ p: isSmallScreen ? 0 : 2 }}
             >
-              <Avatar>{avtarNameHandler(user?.data?.username)}</Avatar>
+              <Avatar sx={{ bgcolor: "#bfa181", color: "#0A1828" }}>
+                {avtarNameHandler(user?.data?.username)}
+              </Avatar>
             </IconButton>
           </Tooltip>
           <Menu
@@ -304,50 +298,47 @@ const NavBar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem
-                key={setting.id}
-                onClick={() => {
-                  handleCloseUserMenu();
-                  settingsHandler(setting.id);
-                }}
-              >
+            {user?.data?.premiumUser && (
+              <MenuItem>
                 <Typography
                   textAlign="center"
                   sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    navigate("/download-history");
+                  }}
                 >
-                  {setting.value}
+                  Download History
                 </Typography>
               </MenuItem>
-            ))}
-            {user?.data?.premiumUser && (
-              <>
-                <MenuItem>
-                  <Typography
-                    textAlign="center"
-                    sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      navigate("/download-history");
-                    }}
-                  >
-                    Download History
-                  </Typography>
-                </MenuItem>
-                <MenuItem>
-                  <Typography
-                    textAlign="center"
-                    sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      navigate("/leader-board");
-                    }}
-                  >
-                    Leaderboard
-                  </Typography>
-                </MenuItem>
-              </>
             )}
+            {user?.data?.premiumUser && (
+              <MenuItem>
+                <Typography
+                  textAlign="center"
+                  sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    navigate("/leader-board");
+                  }}
+                >
+                  Leaderboard
+                </Typography>
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={() => {
+                handleCloseUserMenu();
+                settingsHandler();
+              }}
+            >
+              <Typography
+                textAlign="center"
+                sx={{ fontSize: "20px", color: "#178582", fontWeight: 700 }}
+              >
+                Logout
+              </Typography>
+            </MenuItem>
           </Menu>
         </Toolbar>
       </Container>

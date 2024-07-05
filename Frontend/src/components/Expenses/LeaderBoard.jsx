@@ -53,9 +53,9 @@ const LeaderBoard = () => {
   }, []);
 
   return (
-    <Box sx={{ p: 4}}>
-      <Paper sx={{ m: "40px auto auto auto", backgroundColor: "#fceddc"  }}>
-        <TableContainer sx={{ maxHeight: 440}}>
+    <Box sx={{ p: 4 }}>
+      <Paper sx={{ m: "40px auto auto auto", backgroundColor: "#fceddc" }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -79,13 +79,13 @@ const LeaderBoard = () => {
               <TableBody>
                 {leaderBoardData?.data
                   // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  ?.map((row) => {
+                  ?.map((row,index) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id}
+                        key={index}
                       >
                         <TableCell align="left">{row.username}</TableCell>
                         <TableCell align="left">

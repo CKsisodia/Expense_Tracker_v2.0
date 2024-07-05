@@ -12,7 +12,6 @@ class ExpenseApiServices {
       toast.success(response?.data?.message);
       return response?.data;
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
       throw error;
     }
@@ -33,7 +32,6 @@ class ExpenseApiServices {
       const response = await ApiHelper.get("/expense/expense-list", params);
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -46,7 +44,6 @@ class ExpenseApiServices {
       toast.success(response?.data?.message);
       return response?.data;
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
       throw error;
     }
@@ -67,7 +64,6 @@ class ExpenseApiServices {
       toast.success(response?.data?.message);
       return response?.data;
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
       throw error;
     }
@@ -78,7 +74,6 @@ class ExpenseApiServices {
       const response = await ApiHelper.get("/expense/premium-leaderboard");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -88,7 +83,6 @@ class ExpenseApiServices {
       const response = await ApiHelper.get("/expense/download-expenses-list");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -98,7 +92,6 @@ class ExpenseApiServices {
       const response = await ApiHelper.get("/expense/download-history");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };

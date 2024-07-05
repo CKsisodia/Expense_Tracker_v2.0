@@ -43,8 +43,6 @@ const ResetPassword = () => {
       token: token,
     };
     const response = await dispatch(resetPasswordAction(newPasswordData));
-
-    console.log(response);
     const status = response?.type?.split("/")[1];
     if (status === "fulfilled") {
       setIsPasswordChanged(true);
