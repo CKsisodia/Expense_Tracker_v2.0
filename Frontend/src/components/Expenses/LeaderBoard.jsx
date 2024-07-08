@@ -50,7 +50,7 @@ const LeaderBoard = () => {
 
   useEffect(() => {
     dispatch(getLeaderboardAction());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box sx={{ p: 4 }}>

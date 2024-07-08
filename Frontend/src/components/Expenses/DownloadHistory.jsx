@@ -52,7 +52,7 @@ const DownloadHistory = () => {
 
   useEffect(() => {
     dispatch(getDownloadHistoryAction());
-  }, []);
+  }, [dispatch]);
 
   const handleClick = (fileurl, filename) => {
     downloadFile(fileurl, filename);
