@@ -5,7 +5,7 @@ class ApiHelper {
   constructor() {
     if (!ApiHelper.instance) {
       this.client = axios.create({
-        baseURL: "http://13.233.92.255:5000",
+        baseURL: "http://13.233.92.255:3000",
         headers: {
           "Content-Type": "application/json",
         },
@@ -63,7 +63,7 @@ class ApiHelper {
         throw new Error("No refresh token available");
       }
 
-      const response = await axios.post("http://13.233.92.255:5000/user/refresh", {
+      const response = await axios.post("http://13.233.92.255:3000/user/refresh", {
         refreshToken: refreshToken,
         email: userEmail.email,
       });
