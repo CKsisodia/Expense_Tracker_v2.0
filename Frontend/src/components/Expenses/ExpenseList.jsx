@@ -3,9 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   IconButton,
   InputBase,
-  Stack,
-  TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -16,22 +14,20 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { MagnifyingGlass } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
+import { useDebounceVal } from "../../hooks/useDebounce";
 import {
   deleteExpenseAction,
   getAllExpenseAction,
 } from "../../redux/actions/asyncExpenseAction";
 import {
   expenseAction,
-  selectExpenseData,
-  selectQueryParam,
+  selectExpenseData
 } from "../../redux/reducers/expenseSlice";
 import formatDate from "../../utils/formattedDate";
 import EditExpense from "./EditExpense";
-import { useState } from "react";
-import { useDebounceVal } from "../../hooks/useDebounce";
-import { MagnifyingGlass } from "react-loader-spinner";
 
 const columns = [
   { id: "category", label: "Category", align: "left", minWidth: 100 },

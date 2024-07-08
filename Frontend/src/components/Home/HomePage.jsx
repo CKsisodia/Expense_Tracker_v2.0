@@ -1,20 +1,19 @@
 import {
   Box,
   Grid,
-  Paper,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import React from "react";
 import {
-  FcPrivacy,
   FcConferenceCall,
   FcOvertime,
+  FcPrivacy,
   FcStatistics,
 } from "react-icons/fc";
-import { MdWorkspacePremium } from "react-icons/md";
 import { GiReceiveMoney } from "react-icons/gi";
+import { MdWorkspacePremium } from "react-icons/md";
 import { DNA } from "react-loader-spinner";
 
 const HomePage = () => {

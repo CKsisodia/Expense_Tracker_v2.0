@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import styles from "../../styles/AccessLayout.module.css";
 import LockIcon from "@mui/icons-material/Lock";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { resetPasswordAction } from "../../redux/actions/asyncAuthAction";
+import styles from "../../styles/AccessLayout.module.css";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
