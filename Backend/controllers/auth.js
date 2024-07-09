@@ -172,7 +172,7 @@ exports.userForgotpassword = async (req, res) => {
       isActive: true,
       token: uniqueToken,
     });
-    const link = `http://13.233.92.255/reset-password?token=${uniqueToken}`;
+    const link = `http://13.233.92.255:3000/reset-password?token=${uniqueToken}`;
 
     const transporter = nodeMailer.createTransport({
       service: process.env.NODE_MAILER_SERVICE,
